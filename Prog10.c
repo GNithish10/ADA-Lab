@@ -1,62 +1,55 @@
 #include <stdio.h>
-
-#define MAX_N 100
-#define MAX_SUM 1000
-
-int main() {
-    int n, d, S[MAX_N];
-    int dp[MAX_N + 1][MAX_SUM + 1];
-    int i, j;
-
-    printf("Enter number of elements in set: ");
+#include <conio.h>
+int s[10], x[10], d;
+void sumofsub(int, int, int);
+void main()
+{
+    int n, sum = 0;
+    int i;
+    printf(" \n Enter the size of the set : ");
     scanf("%d", &n);
-
-    printf("Enter the elements of the set:\n");
-    for (i = 0; i < n; i++)
-        scanf("%d", &S[i]);
-
-    printf("Enter the required sum: ");
+    printf(" \n Enter the set in increasing order:\n");
+    for (i = 1; i <= n; i++)
+    {
+        scanf("%d", &s[i]);
+    }
+    printf(" \n Enter the value of d : \n ");
     scanf("%d", &d);
-
-    // Initialize DP table
-    for (i = 0; i <= n; i++)
-        dp[i][0] = 1; // Sum 0 is always possible (empty subset)
-    for (j = 1; j <= d; j++)
-        dp[0][j] = 0; // With 0 elements, no sum except 0 is possible
-
-    // Fill DP table
-    for (i = 1; i <= n; i++) {
-        for (j = 1; j <= d; j++) {
-            if (j < S[i-1])
-                dp[i][j] = dp[i-1][j];
-            else
-                dp[i][j] = dp[i-1][j] || dp[i-1][j - S[i-1]];
+    for (i = 1; i <= n; i++)
+    {
+        sum = sum + s[i];
+    }
+    if (sum < d || s[1] > d)
+    {
+        printf(" \n No subset possible : ");
+    }
+    else
+    {
+        sumofsub(0, 1, sum);
+    }
+    getch();
+}
+void sumofsub(int m, int k, int r)
+{
+    int i = 1;
+    x[k] = 1;
+    if ((m + s[k]) == d)
+    {
+        printf("Subset:");
+        for (i = 1; i <= k; i++)
+        {
+            if (x[i] == 1)
+                printf("\t%d", s[i]);
+            printf("\n");
         }
     }
-
-    // If no subset with sum d exists
-    if (!dp[n][d]) {
-        printf("No subset found\n");
-        return 0;
+    else if (m + s[k] + s[k + 1] <= d)
+    {
+        sumofsub(m + s[k], k + 1, r - s[k]);
     }
-
-    // To print one subset, backtrack the DP table
-    printf("Subset with sum %d is: ", d);
-    i = n;
-    j = d;
-    while (i > 0 && j > 0) {
-        // If the sum j can be obtained without the current element,
-        // then the current element is not included.
-        if (dp[i-1][j])
-            i--;
-        else {
-            // Else the current element is included.
-            printf("%d ", S[i-1]);
-            j -= S[i-1];
-            i--;
-        }
+    if ((m + r - s[k] >= d) && (m + s[k + 1] <= d))
+    {
+        x[k] = 0;
+        sumofsub(m, k + 1, r - s[k]);
     }
-    printf("\n");
-
-    return 0;
 }
