@@ -38,9 +38,10 @@ void sumofsub(int m, int k, int r)
         printf("Subset:");
         for (i = 1; i <= k; i++)
         {
-            if (x[i] == 1)
+            if (x[i] == 1){
                 printf("\t%d", s[i]);
-            printf("\n");
+                printf("\n");
+            }
         }
     }
     else if (m + s[k] + s[k + 1] <= d)
